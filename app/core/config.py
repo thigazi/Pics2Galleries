@@ -1,5 +1,8 @@
 from zope.interface import Interface
 from zope.interface import implementer
+from os.path import join
+from os.path import exists
+from os import getcwd
 
 
 class IManager(Interface):
@@ -15,7 +18,13 @@ class Manager(object):
         pass
 
     def Tasks(self, param=None):
-        pass
+        if param == 'checkConfig':
+            cfgFile = join(getcwd(), 'config.xml')
+            print(cfgFile)
+            if exists(cfgFile):
+                return "YES Config"
+            else:
+                return "NO Config"
 
     def __configLoader(self):
         pass

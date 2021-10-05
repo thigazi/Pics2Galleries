@@ -6,11 +6,11 @@ from ZEO import ClientStorage
 from os import getcwd
 
 
-class IDBX(Interface):
+class IZODB(Interface):
     pass
 
 
-@implementer(IDBX)
+@implementer(IZODB)
 class DBX(object):
 
     def __init__(self):
@@ -28,3 +28,32 @@ class DBX(object):
         del self.__dbx
         del self.__conn
         del self.__fsx
+
+
+class ISQLA(Interface):
+    pass
+
+
+@implementer(ISQLA)
+class SQLA(object):
+    def __init__(self):
+        pass
+
+
+class IMongoDB(Interface):
+    pass
+
+
+@implementer(IMongoDB)
+class MongoDB(object):
+    pass
+
+
+class ICloudFileStorage(Interface):
+    pass
+
+
+@implementer(ICloudFileStorage)
+class CloudFileStorage(object):
+    def __init__(self):
+        pass
