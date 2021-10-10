@@ -21,7 +21,7 @@ Authenticator or Redhat's FreeOTP that is available for Android and Iphone.
 
 I splitted up the project itself in Taks:
 
-- [ ] Basic Application Skeleton
+- [X] Basic Application Skeleton
 - [ ] Backend Development
 - [ ] Frontend Development
 - [ ] FileSharing Google Drive, DropBox API
