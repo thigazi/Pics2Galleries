@@ -22,9 +22,9 @@ class Manager(object):
             cfgFile = join(getcwd(), 'config.xml')
             print(cfgFile)
             if exists(cfgFile):
-                return "YES Config"
+                return True
             else:
-                return "NO Config"
+                return False
 
     def __configLoader(self):
         pass
