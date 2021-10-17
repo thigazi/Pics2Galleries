@@ -3,7 +3,7 @@
     <head>
         <title>Welcome to Pics2Galleries</title>
         <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
-        <script src="js/jquery/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="js/jquery/jquery-3.6.0.min.js"></script>
         <script src="js/semantic/semantic.min.js"></script>
         <script lang="javascript">
           //reformatting UI
@@ -12,6 +12,7 @@
               lastChoice = parseInt($("input[name|='DBSelector']")[0].value);
               choiceNumber = this.value;
               divColumns = $("div.ui.input");
+              textColumns = $("input[type|='text']");
               
               $("input[name|='DBSelector']")[0].value = choiceNumber;
 
@@ -20,6 +21,7 @@
                   for(i=0;i<=4;i++){
                     divColumns[i].classList.add('disabled');
                   }
+                  $("button[name|='ResetFormButton']")[0].classList.add('disabled');
                 }
               }
 
@@ -29,14 +31,98 @@
                     for(i=0;i<=4;i++){
                       divColumns[i].classList.remove('disabled');
                     }
+                    $("button[name|='ResetFormButton']")[0].classList.remove('disabled');
                   }
                 }                
-              }              
+              }
+              
+              for(i=0;i<=4;i++){
+                textColumns[i].value = null;
+              }
+            });
+
+            $("button[name|='ResetFormButton']").click(function(){
+              textColumns = $("input[type|='text']");
+
+              for(i=0;i<=4;i++){
+                textColumns[i].value = null;
+              }
+            });
+
+            $("button[name|='SubmitFormButton']").click(function(){
+              thisChoice = parseInt($("input[name|='DBSelector']")[0].value);
+              textColumns = $("input[type|='text']");
+
+              CheckUpArray = [];
+
+              if(thisChoice<3){
+                for(i=0;i<4;i++){
+                  switch(i){
+                    case 0:
+                      ipAddRegex = /^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/gm;
+                      socketFileRegex = /^\S*\.socket/gm;
+                      
+                      if(ipAddRegex.exec(textColumns[i].value) == null && socketFileRegex.exec(textColumns[i].value) == null){
+                        CheckUpArray[i] = false;
+                      }
+                      
+                      else {
+                        CheckUpArray[i] = true;
+                      }
+                      break;
+                      
+                    case 1:
+                      portRegex = /^\d{3,5}$/gm;
+                      if(portRegex.exec(textColumns[i].value)==null){
+                        CheckUpArray[i] = false;
+                      }
+
+                      else {
+                        CheckUpArray[i] = true;
+                      }
+                      break;
+                    
+                    case 2:
+                      dbnameRegex = /^[a-zA-Z0-9_.-]{1,20}$/gm;
+                      if(dbnameRegex.exec(textColumns[i].value)==null){
+                        CheckUpArray[i] = false;
+                      }
+
+                      else {
+                        CheckUpArray[i] = true;
+                      }
+                      break;
+                    
+                    case 3:
+                      unameRegex = /^[a-zA-Z0-9_.-]{1,20}$/gm;
+                      if(unameRegex.exec(textColumns[i].value)==null){
+                        CheckUpArray[i] = false;
+                      }
+                      else {
+                        CheckUpArray[i] = true;
+                      }
+                      break;
+                    
+                    case 4:
+                      passRegex = /^\S{3,30}$/gs;
+                      if(passRegex.exec(textColumns[i].value)==null){
+                        CheckUpArray[i] = false;
+                      }
+                      else {
+                        CheckUpArray[i] = true;
+                      }                      
+                      break;
+                  }
+                }
+                console.log(CheckUpArray)
+              }
+
+              else {
+
+              }
+              
+            });
           });
-
-          
-
-        });
         </script>
         <style>
         div span {
@@ -45,13 +131,33 @@
 
         div#Description {
           margin-top: 10px;
-        }          
+        }
+
+        div.ui.two.column.stackable.grid {
+          margin-top: 3px;
+        }
+
+        div.ui.segments {
+          max-width: 500px;
+          left: 25%;
+        }
+
+        ui.center.aligned.header {
+          border-top: 20px;
+        }
+
+        .WarningBorder {
+          border-style:dashed;
+          border-color: red;
+          border-width: 2.2px;
+        }
+
         </style>
     </head>
     <body>
-      <h5 class="ui center aligned header" style="border-top: 20px;">This is the Setup Initialization Program.<br>Here we setup the connection parameters where your pictures and galleries are stored.<br>Please choose your storage type and set the parameters...</h5>
+      <h5 class="ui center aligned header">This is the Setup Initialization Program.<br>Here we setup the connection parameters where your pictures and galleries are stored.<br>Please choose your storage type and set the parameters...</h5>
       <div class="ui container">
-        <div class="ui segments" style="max-width: 500px;left:25%" >
+        <div class="ui segments" >
           <div class="ui segment">
             <div class="ui two column stackable grid">
               <div class="column" style="max-width: 100px;" >Storage Type:</div>
@@ -95,8 +201,9 @@
             <div class="column"><div class="ui input"><input type="text"></div></div>
           </div>
 
+          
+          <div class="ui segment" style="border-style: solid;border-width: 0px;"><span style="color: red;">Okay we have stored all values</span></div>
           <!--
-          <div class="ui segment">Content</div>
           <div class="ui segment">Content</div>
           -->          
         </div>
@@ -106,16 +213,17 @@
         <div class="ui segment">
         <div class="ui one column stackable grid" style="padding-bottom: 10px;">
           <div class="ui buttons" style="padding-top: 10px;">
-            <button class="ui button">Reset Form</button>
+            <button name="ResetFormButton" class="ui button">Reset All Form Data</button>
             <div class="or"></div>
-            <button class="ui positive button">Submit Data</button>
+            <button name="SubmitFormButton" class="ui positive button">Test & Save Settings</button>
           </div>
         </div>
         </div>
       </div>
       <form name="SettingsStorage">
-      <input type="hidden" name="DBSelector" value="0">      
-      <input type="hidden" name="AccessType">
+        <input type="hidden" name="AccessType">
+        <input type="hidden" name="DBSelector" value="0">
+        <input type="hidden" name="DBCredentials">      
       </form>
     </body>
 </html>
