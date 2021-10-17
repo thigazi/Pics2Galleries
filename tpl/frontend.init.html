@@ -6,25 +6,116 @@
         <script src="js/jquery/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
         <script src="js/semantic/semantic.min.js"></script>
         <script lang="javascript">
-            console.log("Hallo Tamer");
-        </script>
-    </head>
+          //reformatting UI
+          $(document).ready(function(){
+            $("select[name|='DBSelector']").change(function(){
+              lastChoice = parseInt($("input[name|='DBSelector']")[0].value);
+              choiceNumber = this.value;
+              divColumns = $("div.ui.input");
+              
+              $("input[name|='DBSelector']")[0].value = choiceNumber;
 
-    <body>        
-<h3 class="ui center aligned header" style="margin-top: 10px;">Container</h3>
-<h5 class="ui center aligned header">This is the Setup Initialization Program.<br>Here we setup the connection parameters where your pictures and galleries are stored.<br>Please choose your storage type and set the parameters...</h5>
-<div class="ui container">
-  <div class="ui segments">
-    <div class="ui segment">Storage Type: <select class="ui dropdown">
-        <option value="0">--</option>
-        <option value="1">Database Managment System</option>
-        <option value="2">Filesharing Provider</option>
-        <option value="3">FileSystem</option>
-    </select></div>
-    <div class="ui segment">Content<br>klklk</div>
-    <div class="ui segment">Content</div>
-    <div class="ui segment">Content</div>
-  </div>
-</div>
-</body>
+              if(choiceNumber>=3){
+                if(lastChoice<3){
+                  for(i=0;i<=4;i++){
+                    divColumns[i].classList.add('disabled');
+                  }
+                }
+              }
+
+              else {
+                if (choiceNumber<3){
+                  if(lastChoice>=3){
+                    for(i=0;i<=4;i++){
+                      divColumns[i].classList.remove('disabled');
+                    }
+                  }
+                }                
+              }              
+          });
+
+          
+
+        });
+        </script>
+        <style>
+        div span {
+          padding-top: 20px;          
+        }
+
+        div#Description {
+          margin-top: 10px;
+        }          
+        </style>
+    </head>
+    <body>
+      <h5 class="ui center aligned header" style="border-top: 20px;">This is the Setup Initialization Program.<br>Here we setup the connection parameters where your pictures and galleries are stored.<br>Please choose your storage type and set the parameters...</h5>
+      <div class="ui container">
+        <div class="ui segments" style="max-width: 500px;left:25%" >
+          <div class="ui segment">
+            <div class="ui two column stackable grid">
+              <div class="column" style="max-width: 100px;" >Storage Type:</div>
+              <div class="column"><select name="StorageSelector" class="ui dropdown">        
+                <option value="0">Database Managment System</option>
+                <!--<option value="1">Filesharing Provider</option>
+                <option value="3">FileSystem</option>-->
+            </select></div>
+            </div>   
+          </div>
+          <form name="StorageValues">
+          <div class="ui segment">
+            <div class="ui two column stackable grid">
+              <div class="column" style="max-width: 100px;"><span>Select DB Type:</span></div>
+              <div class="column" style="max-width: 100px;"><select name="DBSelector" class="ui dropdown">
+                <option value="0">PostgreSQL</option>
+                <option value="1">MySQL</option>
+                <option value="2">MongoDB</option>
+                <option value="3">ZODB</option>
+                <option value="4">SQLite</option>
+              </select></div>  
+            </div>
+          <div class="ui two column stackable grid">
+            <div class="column" style="max-width: 100px;" id="Description" ></span>Host:<span></div>
+            <div class="column"><div class="ui input"><input type="text"></div></div>
+          </div>   
+          <div class="ui two column stackable grid">
+            <div class="column" style="max-width: 100px;" id="Description" ><span>Port:</span></div>
+            <div class="column"><div class="ui input"><input type="text"></div></div>
+          </div>
+          <div class="ui two column stackable grid" >
+            <div class="column" style="max-width: 100px;" id="Description" ><span>Database:</span></div>
+            <div class="column"><div class="ui input"><input type="text"></div></div>
+          </div>
+          <div class="ui two column stackable grid">
+            <div class="column" style="max-width: 100px;" id="Description">Username:</div>
+            <div class="column"><div class="ui input"><input type="text"></div></div>
+          </div>
+          <div class="ui two column stackable grid">
+            <div class="column" style="max-width: 100px;" id="Description">Password:</div>
+            <div class="column"><div class="ui input"><input type="text"></div></div>
+          </div>
+
+          <!--
+          <div class="ui segment">Content</div>
+          <div class="ui segment">Content</div>
+          -->          
+        </div>
+      </form>
+
+
+        <div class="ui segment">
+        <div class="ui one column stackable grid" style="padding-bottom: 10px;">
+          <div class="ui buttons" style="padding-top: 10px;">
+            <button class="ui button">Reset Form</button>
+            <div class="or"></div>
+            <button class="ui positive button">Submit Data</button>
+          </div>
+        </div>
+        </div>
+      </div>
+      <form name="SettingsStorage">
+      <input type="hidden" name="DBSelector" value="0">      
+      <input type="hidden" name="AccessType">
+      </form>
+    </body>
 </html>
