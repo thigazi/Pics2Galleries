@@ -1,216 +1,300 @@
 <html>
-    <meta charset="UTF-8">
-    <head>
-        <title>Welcome to Pics2Galleries</title>
-        <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
-        <script src="js/jquery/jquery-3.6.0.min.js"></script>
-        <script src="js/semantic/semantic.min.js"></script>
-        <script lang="javascript">
-          //reformatting UI
-          $(document).ready(function(){
-            $("select[name|='DBSelector']").change(function(){
-              lastChoice = parseInt($("input[name|='DBSelector']")[0].value);
-              choiceNumber = this.value;
-              divColumns = $("div.ui.input");
-              textColumns = $("input[type|='text']");
-              
-              $("input[name|='DBSelector']")[0].value = choiceNumber;
+<meta charset="UTF-8">
 
-              if(choiceNumber>=3){
-                if(lastChoice<3){
-                  for(i=0;i<=4;i++){
-                    divColumns[i].classList.add('disabled');
-                  }
-                  $("button[name|='ResetFormButton']")[0].classList.add('disabled');
+<head>
+  <title>Welcome to Pics2Galleries</title>
+  <link rel="stylesheet" type="text/css" href="js/semantic/semantic.min.css">
+  <script src="js/jquery/jquery-3.6.0.min.js"></script>
+  <script src="js/semantic/semantic.min.js"></script>
+  <script lang="javascript">
+    //reformatting UI
+    $(document).ready(function () {
+      $("select[name|='DBSelector']").change(function () {
+        lastChoice = parseInt($("input[name|='DBSelector']")[0].value);
+        choiceNumber = this.value;
+        divColumns = $("div.ui.input");
+        textColumns = $("input[type|='text']");
+
+        $("input[name|='DBSelector']")[0].value = choiceNumber;
+
+        if (choiceNumber >= 3) {
+          if (lastChoice < 3) {
+            for (i = 0; i <= 4; i++) {
+              divColumns[i].classList.add('disabled');
+            }
+            $("button[name|='ResetFormButton']")[0].classList.add('disabled');
+          }
+        }
+
+        else {
+          if (choiceNumber < 3) {
+            if (lastChoice >= 3) {
+              for (i = 0; i <= 4; i++) {
+                divColumns[i].classList.remove('disabled');
+              }
+              $("button[name|='ResetFormButton']")[0].classList.remove('disabled');
+            }
+          }
+        }
+
+        for (i = 0; i <= 4; i++) {
+          textColumns[i].value = null;
+        }
+      });
+
+      $("button[name|='ResetFormButton']").click(function () {
+        textColumns = $("input[type|='text']");
+
+        for (i = 0; i <= 4; i++) {
+          textColumns[i].value = null;
+        }
+      });
+
+      $("button[name|='SubmitFormButton']").click(function () {
+        thisChoice = parseInt($("input[name|='DBSelector']")[0].value);
+        textColumns = $("input[type|='text']");
+        BorderTextColumns = $("div.ui.input");
+        errorMGGString = null;
+
+        CheckUpArray = [];
+        resultCheck = true;
+
+        if (thisChoice < 3) {
+          for (i = 0; i <= 4; i++) {
+            switch (i) {
+              case 0:
+                ipAddRegex = /^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/gm;
+                ip6AddRegex = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/;
+                socketFileRegex = /^\S*\.socket/gm;
+
+                if (ipAddRegex.exec(textColumns[i].value) == null && ip6AddRegex.exec(textColumns[i].value) == null && socketFileRegex.exec(textColumns[i].value) == null) {
+                  CheckUpArray[i] = false;
                 }
+
+                else {
+                  CheckUpArray[i] = true;
+                }
+                break;
+
+              case 1:
+                portRegex = /^\d{3,5}$/gm;
+                if (portRegex.exec(textColumns[i].value) == null) {
+                  CheckUpArray[i] = false;
+                }
+
+                else {
+                  CheckUpArray[i] = true;
+                }
+                break;
+
+              case 2:
+                dbnameRegex = /^[a-zA-Z0-9_.-]{4,20}$/gm;
+                if (dbnameRegex.exec(textColumns[i].value) == null) {
+                  CheckUpArray[i] = false;
+                }
+
+                else {
+                  CheckUpArray[i] = true;
+                }
+                break;
+
+              case 3:
+                unameRegex = /^[a-zA-Z0-9_.-]{4,20}$/gm;
+                if (unameRegex.exec(textColumns[i].value) == null) {
+                  CheckUpArray[i] = false;
+                }
+                else {
+                  CheckUpArray[i] = true;
+                }
+                break;
+
+              case 4:
+                passRegex = /^\S{8,30}$/gs;
+                if (passRegex.exec(textColumns[i].value) == null) {
+                  CheckUpArray[i] = false;
+                }
+                else {
+                  CheckUpArray[i] = true;
+                }
+                break;
+            }
+          }
+
+          for (i = 0; i <= 4; i++) {
+            BorderTextColumns[i].classList.remove('WarningBorder');
+          }
+          $("span[name|='ResultField']").html('');
+
+          for (i = 0; i < CheckUpArray.length; i++) {
+            if (CheckUpArray[i] == false) {
+              if (resultCheck == true) {
+                resultCheck = false;
+              }
+            }
+          }
+
+          if (resultCheck == false) {
+            for (i = 0; i <= 4; i++) {
+              if (CheckUpArray[i] == false) {
+                BorderTextColumns[i].classList.add('WarningBorder');
               }
 
-              else {
-                if (choiceNumber<3){
-                  if(lastChoice>=3){
-                    for(i=0;i<=4;i++){
-                      divColumns[i].classList.remove('disabled');
+              switch (i) {
+                case 0:
+                  if (CheckUpArray[i] == false) {
+                    errorMGGString = 'Hostname must be either IP-Adress or full path to socket file'
+                  }
+                  break;
+
+                case 1:
+                  if (CheckUpArray[i] == false) {
+                    if (errorMGGString != null) {
+                      errorMGGString += '<br>';
                     }
-                    $("button[name|='ResetFormButton']")[0].classList.remove('disabled');
+                    errorMGGString += 'please enter a valid IP Version 4 or 6 Address or full path to socket file';
                   }
-                }                
-              }
-              
-              for(i=0;i<=4;i++){
-                textColumns[i].value = null;
-              }
-            });
-
-            $("button[name|='ResetFormButton']").click(function(){
-              textColumns = $("input[type|='text']");
-
-              for(i=0;i<=4;i++){
-                textColumns[i].value = null;
-              }
-            });
-
-            $("button[name|='SubmitFormButton']").click(function(){
-              thisChoice = parseInt($("input[name|='DBSelector']")[0].value);
-              textColumns = $("input[type|='text']");
-
-              CheckUpArray = [];
-
-              if(thisChoice<3){
-                for(i=0;i<4;i++){
-                  switch(i){
-                    case 0:
-                      ipAddRegex = /^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/gm;
-                      socketFileRegex = /^\S*\.socket/gm;
-                      
-                      if(ipAddRegex.exec(textColumns[i].value) == null && socketFileRegex.exec(textColumns[i].value) == null){
-                        CheckUpArray[i] = false;
-                      }
-                      
-                      else {
-                        CheckUpArray[i] = true;
-                      }
-                      break;
-                      
-                    case 1:
-                      portRegex = /^\d{3,5}$/gm;
-                      if(portRegex.exec(textColumns[i].value)==null){
-                        CheckUpArray[i] = false;
-                      }
-
-                      else {
-                        CheckUpArray[i] = true;
-                      }
-                      break;
-                    
-                    case 2:
-                      dbnameRegex = /^[a-zA-Z0-9_.-]{1,20}$/gm;
-                      if(dbnameRegex.exec(textColumns[i].value)==null){
-                        CheckUpArray[i] = false;
-                      }
-
-                      else {
-                        CheckUpArray[i] = true;
-                      }
-                      break;
-                    
-                    case 3:
-                      unameRegex = /^[a-zA-Z0-9_.-]{1,20}$/gm;
-                      if(unameRegex.exec(textColumns[i].value)==null){
-                        CheckUpArray[i] = false;
-                      }
-                      else {
-                        CheckUpArray[i] = true;
-                      }
-                      break;
-                    
-                    case 4:
-                      passRegex = /^\S{3,30}$/gs;
-                      if(passRegex.exec(textColumns[i].value)==null){
-                        CheckUpArray[i] = false;
-                      }
-                      else {
-                        CheckUpArray[i] = true;
-                      }                      
-                      break;
+                  break;
+                case 2:
+                  if (CheckUpArray[i] == false) {
+                    if (errorMGGString != null) {
+                      errorMGGString += '<br>';
+                    }
+                    errorMGGString += 'database name, A-Za-Z _ and - are allowed, min 4 and max 20 character';
                   }
-                }
-                console.log(CheckUpArray)
+                  break;
+                case 3:
+                  if (CheckUpArray[i] == false) {
+                    if (errorMGGString != null) {
+                      errorMGGString += '<br>';
+                    }
+                    errorMGGString += 'username, A-Za-Z _ and - are allowed, min 4 and max 20 character';
+                  }
+                  break;
+
+                case 4:
+                  if (CheckUpArray[i] == false) {
+                    if (errorMGGString != null) {
+                      errorMGGString += '<br>';
+                    }
+                    errorMGGString += 'password minimum 8 and max 30 NON-white space characters';
+                  }
+                  break;
               }
+            }
+            $("span[name|='ResultField']").html(errorMGGString);
+          }
 
-              else {
-
-              }
-              
-            });
-          });
-        </script>
-        <style>
-        div span {
-          padding-top: 20px;          
+          else {
+            //connection Test
+          }
         }
 
-        div#Description {
-          margin-top: 10px;
-        }
+        else {
 
-        div.ui.two.column.stackable.grid {
-          margin-top: 3px;
         }
+      });
+    });
+  </script>
+  <style>
+    div span {
+      padding-top: 20px;
+    }
 
-        div.ui.segments {
-          max-width: 500px;
-          left: 25%;
-        }
+    div#Description {
+      margin-top: 10px;
+    }
 
-        ui.center.aligned.header {
-          border-top: 20px;
-        }
+    div.ui.two.column.stackable.grid {
+      margin-top: 3px;
+    }
 
-        .WarningBorder {
-          border-style:dashed;
-          border-color: red;
-          border-width: 2.2px;
-        }
+    div.ui.segments {
+      max-width: 500px;
+      left: 25%;
+    }
 
-        </style>
-    </head>
-    <body>
-      <h5 class="ui center aligned header">This is the Setup Initialization Program.<br>Here we setup the connection parameters where your pictures and galleries are stored.<br>Please choose your storage type and set the parameters...</h5>
-      <div class="ui container">
-        <div class="ui segments" >
-          <div class="ui segment">
-            <div class="ui two column stackable grid">
-              <div class="column" style="max-width: 100px;" >Storage Type:</div>
-              <div class="column"><select name="StorageSelector" class="ui dropdown">        
-                <option value="0">Database Managment System</option>
-                <!--<option value="1">Filesharing Provider</option>
+    ui.center.aligned.header {
+      border-top: 20px;
+    }
+
+    .WarningBorder {
+      border-style: dashed;
+      border-color: red;
+      border-width: 2.2px;
+    }
+  </style>
+</head>
+
+<body>
+  <h5 class="ui center aligned header">This is the Setup Initialization Program.<br>Here we setup the connection
+    parameters where your pictures and galleries are stored.<br>Please choose your storage type and set the
+    parameters...</h5>
+  <div class="ui container">
+    <div class="ui segments">
+      <div class="ui segment">
+        <div class="ui two column stackable grid">
+          <div class="column" style="max-width: 100px;">Storage Type:</div>
+          <div class="column"><select name="StorageSelector" class="ui dropdown">
+              <option value="0">Database Managment System</option>
+              <!--<option value="1">Filesharing Provider</option>
                 <option value="3">FileSystem</option>-->
             </select></div>
-            </div>   
-          </div>
-          <form name="StorageValues">
-          <div class="ui segment">
-            <div class="ui two column stackable grid">
-              <div class="column" style="max-width: 100px;"><span>Select DB Type:</span></div>
-              <div class="column" style="max-width: 100px;"><select name="DBSelector" class="ui dropdown">
+        </div>
+      </div>
+      <form name="StorageValues">
+        <div class="ui segment">
+          <div class="ui two column stackable grid">
+            <div class="column" style="max-width: 100px;"><span>Select DB Type:</span></div>
+            <div class="column" style="max-width: 100px;"><select name="DBSelector" class="ui dropdown">
                 <option value="0">PostgreSQL</option>
                 <option value="1">MySQL</option>
                 <option value="2">MongoDB</option>
                 <option value="3">ZODB</option>
                 <option value="4">SQLite</option>
-              </select></div>  
-            </div>
-          <div class="ui two column stackable grid">
-            <div class="column" style="max-width: 100px;" id="Description" ></span>Host:<span></div>
-            <div class="column"><div class="ui input"><input type="text"></div></div>
-          </div>   
-          <div class="ui two column stackable grid">
-            <div class="column" style="max-width: 100px;" id="Description" ><span>Port:</span></div>
-            <div class="column"><div class="ui input"><input type="text"></div></div>
+              </select></div>
           </div>
-          <div class="ui two column stackable grid" >
-            <div class="column" style="max-width: 100px;" id="Description" ><span>Database:</span></div>
-            <div class="column"><div class="ui input"><input type="text"></div></div>
+          <div class="ui two column stackable grid">
+            <div class="column" style="max-width: 100px;" id="Description"></span>Host:<span></div>
+            <div class="column">
+              <div class="ui input"><input type="text"></div>
+            </div>
+          </div>
+          <div class="ui two column stackable grid">
+            <div class="column" style="max-width: 100px;" id="Description"><span>Port:</span></div>
+            <div class="column">
+              <div class="ui input"><input type="text"></div>
+            </div>
+          </div>
+          <div class="ui two column stackable grid">
+            <div class="column" style="max-width: 100px;" id="Description"><span>Database:</span></div>
+            <div class="column">
+              <div class="ui input"><input type="text"></div>
+            </div>
           </div>
           <div class="ui two column stackable grid">
             <div class="column" style="max-width: 100px;" id="Description">Username:</div>
-            <div class="column"><div class="ui input"><input type="text"></div></div>
+            <div class="column">
+              <div class="ui input"><input type="text"></div>
+            </div>
           </div>
           <div class="ui two column stackable grid">
             <div class="column" style="max-width: 100px;" id="Description">Password:</div>
-            <div class="column"><div class="ui input"><input type="text"></div></div>
+            <div class="column">
+              <div class="ui input"><input type="text"></div>
+            </div>
           </div>
 
-          
-          <div class="ui segment" style="border-style: solid;border-width: 0px;"><span style="color: red;">Okay we have stored all values</span></div>
+
+          <div class="ui segment" style="border-style: solid;border-width: 0px;"><span name="ResultField"
+              style="color: red;"></span></div>
           <!--
           <div class="ui segment">Content</div>
-          -->          
+          -->
         </div>
       </form>
 
 
-        <div class="ui segment">
+      <div class="ui segment">
         <div class="ui one column stackable grid" style="padding-bottom: 10px;">
           <div class="ui buttons" style="padding-top: 10px;">
             <button name="ResetFormButton" class="ui button">Reset All Form Data</button>
@@ -218,12 +302,14 @@
             <button name="SubmitFormButton" class="ui positive button">Test & Save Settings</button>
           </div>
         </div>
-        </div>
       </div>
-      <form name="SettingsStorage">
-        <input type="hidden" name="AccessType">
-        <input type="hidden" name="DBSelector" value="0">
-        <input type="hidden" name="DBCredentials">      
-      </form>
-    </body>
+    </div>
+    <form name="SettingsStorage">
+      <input type="hidden" name="AccessType" value="dbx">
+      <input type="hidden" name="DBSelector" value="0">
+      <input type="hidden" name="DBCredentials">
+      <input type="hidden" name="CSRX-HASH">
+    </form>
+</body>
+
 </html>
