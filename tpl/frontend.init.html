@@ -188,27 +188,8 @@
             //git nection Test
             textColumns = $("input[type|='text']");
             dbtype = parseInt($("input[name|='DBSelector']")[0].value);
-            switch (dbtype) {
-              case 0:
-                dbtype = 'postgresql';
-                break;
-
-              case 1:
-                dbtype = 'mysql';
-                break;
-
-              case 2:
-                dbtype = 'mongodb';
-                break;
-
-              case 3:
-                dbtype = 'zodb';
-                break;
-
-              case 4:
-                dbtype = 'sqlite';
-                break;
-            }
+            dbmap = ['postgresql', 'mysql', 'mongodb', 'zodb', 'sqlite'];
+            dbtype = dbmap[dbtype];
 
             $.ajax({
               method: "POST",
