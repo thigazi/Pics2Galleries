@@ -4,6 +4,7 @@ from platform import system
 from ZODB import DB
 from ZEO import ClientStorage
 from os import getcwd
+from sqlalchemy import create_engine
 
 
 class IZODB(Interface):
@@ -36,9 +37,16 @@ class ISQLA(Interface):
 
 @implementer(ISQLA)
 class SQLA(object):
-    def __init__(self):
-        pass
-
+    def __init__(self, param):
+        self.engine = create_engine(
+            '%s://%s:%s@%s:%s/%s' % (
+                param['type'],
+                param['user'],
+                param['pass'],
+                param['host'],
+                param['port'],
+                param['database'])
+        )
 
 class IMongoDB(Interface):
     pass
