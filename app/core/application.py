@@ -22,16 +22,16 @@ class PictureManager(object):
     def __init__(self):
         pass
 
-    def ActionHandler(self, app, task, params):
+    def Tasks(self, app, params):
         rset = None
         if app == 'verifyInput':
-            rset = self.__verifyInput(task, params)
+            rset = self.__verifyInput(params)
 
         return rset
 
-    def __verifyInput(self, action_type, param):
+    def __verifyInput(self, param):
         result = None
-        if action_type == 'Initialization_Setup':
+        if param['section'] == 'Initialization_Setup':
             pNames = ['host', 'port', 'username', 'pass', 'dbname']
             totalResult = True
             re_pattern = [
@@ -55,7 +55,12 @@ class PictureManager(object):
                         totalResult = False
             result = totalResult
 
-        elif action_type == 'User_Registration':
+        elif param['section'] == 'User_Registration':
             pass
+
+        elif param['section'] == 'TestSection':
+            print(param['data'])
+
+            result = True
 
         return result

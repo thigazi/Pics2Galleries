@@ -24,4 +24,8 @@ def setup_app():
     elif request.method == 'POST':
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             dset = json_loads(list(request.form.keys())[0])
+            getUtility(IPictureManager).Tasks('verifyInput',{
+                'section':'TestSection',
+                'data':dset
+            })
             return json_dumps({'hallo': 'tamer'})
