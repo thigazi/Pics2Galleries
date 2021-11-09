@@ -11,5 +11,3 @@ def hello_admin(task):
     else:
         # check session
         return "CheckSession"
-
-

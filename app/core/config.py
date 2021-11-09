@@ -4,10 +4,8 @@ from os.path import join
 from os.path import exists
 from os import getcwd
 
-
 class IManager(Interface):
     pass
-
 
 @implementer(IManager)
 class Manager(object):
@@ -20,7 +18,6 @@ class Manager(object):
     def Tasks(self, param=None):
         if param == 'checkConfig':
             cfgFile = join(getcwd(), 'config.xml')
-            print(cfgFile)
             if exists(cfgFile):
                 return True
             else:
